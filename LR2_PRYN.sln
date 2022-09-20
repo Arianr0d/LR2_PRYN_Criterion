@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32811.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LR2_PRYN", "LR2_PRYN\LR2_PRYN.vcxproj", "{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Debug|x64.ActiveCfg = Debug|x64
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Debug|x64.Build.0 = Debug|x64
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Debug|x86.ActiveCfg = Debug|Win32
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Debug|x86.Build.0 = Debug|Win32
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Release|x64.ActiveCfg = Release|x64
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Release|x64.Build.0 = Release|x64
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Release|x86.ActiveCfg = Release|Win32
+		{6DC24F5A-D0F1-46A7-B4F9-2670B6444967}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7872EF3-A1DF-4E19-9F98-23C0F5A486EF}
+	EndGlobalSection
+EndGlobal
