@@ -21,25 +21,33 @@ void output(vector<pair<int, int>> res_wald, vector<pair<int, int>> res_savage, 
 	out.open("output.txt");
 	if (out.is_open()) {
 		out << "решения игры следующие:" << endl;
+		out << "по критерию Вальда: ";
 		for (int i = 0; i < res_wald.size(); i++) {
-			out << "по критерию Вальда: " + to_string(res_wald[i].second) + " при стратегии " +
+			out << to_string(res_wald[i].second) + " при стратегии " +
 				to_string(res_wald[i].first) << endl;
 		}
+		out << "по критерию Сэвиджа: ";
 		for (int i = 0; i < res_savage.size(); i++) {
-			out << "по критерию Сэвиджа: " + to_string(res_savage[i].second) + " при стратегии " +
+			out << to_string(res_savage[i].second) + " при стратегии " +
 				to_string(res_savage[i].first) << endl;
 		}
+		out << "по критерию Гурвица: ";
 		for (int i = 0; i < res_hurwitz.size(); i++) {
-			out << "по критерию Гурвица: " + to_string(round(res_hurwitz[i].second * 100) / 100 ) + " при стратегии " +
-				to_string(res_hurwitz[i].first) << endl;
+			out << res_hurwitz[i].second;
+			out << " при стратегии ";
+			out << to_string(res_hurwitz[i].first) << endl;
 		}
+		out << "по критерию Байеса–Лапласа: ";
 		for (int i = 0; i < res_bayeslaplace.size(); i++) {
-			out << "по критерию Байеса–Лапласа: " + to_string(round(res_bayeslaplace[i].second * 100) / 100 ) + " при стратегии " +
-				to_string(res_bayeslaplace[i].first) << endl;
+			out << res_bayeslaplace[i].second;
+			out << " при стратегии ";
+			out << res_bayeslaplace[i].first << endl;
 		}
+		out << "по критерию Ходжа–Лемана: ";
 		for (int i = 0; i < res_hodgeleman.size(); i++) {
-			out << "по критерию Ходжа–Лемана: " + to_string(round(res_hodgeleman[i].second * 100)/ 100 ) + " при стратегии " +
-				to_string(res_hodgeleman[i].first) << endl;
+			out << res_hodgeleman[i].second;
+			out << " при стратегии ";
+			out << res_hodgeleman[i].first << endl;
 		}
 	}
 }
@@ -240,6 +248,8 @@ int main() {
 	int n = 8, m = 10;
 	vector<vector<int>> A(n, vector<int>(m));
 
+	cout << "Поиск решения игры в условиях неопределенности, применяя критерии Вальда, Сэвиджа,\n" <<
+		"Гурвица, Байеса - Лапласа и Ходжа - Лемана" << endl << endl;
 	while (true) {
 		cout << "Использовать значения по умолчанию (2 вариант): (yes / no) ";
 		cin >> ans;
