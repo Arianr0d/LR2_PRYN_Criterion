@@ -20,34 +20,30 @@ void output(vector<pair<int, int>> res_wald, vector<pair<int, int>> res_savage, 
 	ofstream out;
 	out.open("output.txt");
 	if (out.is_open()) {
-		out << "решения игры следующие:" << endl;
+		out << "Решения игры следующие:" << endl;
 		out << "по критерию Вальда: ";
-		for (int i = 0; i < res_wald.size(); i++) {
-			out << to_string(res_wald[i].second) + " при стратегии " +
-				to_string(res_wald[i].first) << endl;
-		}
+		if (!res_wald.empty()) out << to_string(res_wald[0].second) + " при стратегии " +
+				to_string(res_wald[0].first) << endl;
 		out << "по критерию Сэвиджа: ";
-		for (int i = 0; i < res_savage.size(); i++) {
-			out << to_string(res_savage[i].second) + " при стратегии " +
-				to_string(res_savage[i].first) << endl;
-		}
+		if (!res_savage.empty()) out << to_string(res_savage[0].second) + " при стратегии " +
+				to_string(res_savage[0].first) << endl;
 		out << "по критерию Гурвица: ";
-		for (int i = 0; i < res_hurwitz.size(); i++) {
-			out << res_hurwitz[i].second;
+		if (!res_hurwitz.empty()) {
+			out << res_hurwitz[0].second;
 			out << " при стратегии ";
-			out << to_string(res_hurwitz[i].first) << endl;
+			out << to_string(res_hurwitz[0].first) << endl;
 		}
 		out << "по критерию Байеса–Лапласа: ";
-		for (int i = 0; i < res_bayeslaplace.size(); i++) {
-			out << res_bayeslaplace[i].second;
+		if (!res_bayeslaplace.empty()) {
+			out << res_bayeslaplace[0].second;
 			out << " при стратегии ";
-			out << res_bayeslaplace[i].first << endl;
+			out << res_bayeslaplace[0].first << endl;
 		}
 		out << "по критерию Ходжа–Лемана: ";
-		for (int i = 0; i < res_hodgeleman.size(); i++) {
-			out << res_hodgeleman[i].second;
+		if (!res_hodgeleman.empty()) {
+			out << res_hodgeleman[0].second;
 			out << " при стратегии ";
-			out << res_hodgeleman[i].first << endl;
+			out << res_hodgeleman[0].first << endl;
 		}
 	}
 }
@@ -76,14 +72,6 @@ void findMatrixRisk(vector<int> max_column, vector<vector<int>>& matrix_risk) {
 // функция поиска всех максимумов по вектору
 template <typename T1, typename T2>
 void findAllMaximum(vector<T1> vec, vector<pair<int, T2>> &result, bool max_value = true) {
-
-	/*auto it = minmax_element(vec.begin(), vec.end());
-	int min_idx = distance(vec.begin(), it.first);
-	int max_idx = distance(vec.begin(), it.second);*/
-
-	/*
-		Выводить один макс / мин или все найденные!?
-	*/
 
 	T2 minmax_value = vec[0];
 	result.push_back(make_pair(1, minmax_value));
@@ -197,43 +185,44 @@ void findWaldCriterion(vector<vector<int>> &matrix, vector<pair<int, int>> &resu
 	findAllMaximum(W, result, true);
 }
 
-// функция считывания матрицы из консоли
-void inputMatrix(int n, int m, vector<vector<int>> &matrix) {
-
-	cin.ignore(cin.rdbuf()->in_avail());
-	for (int i = 0; i < n; i++) {
-		int j = 0;
-		string row;
-		getline(cin, row);
-		istringstream ist(row);
-
-		while (ist >> row) {
-			matrix[i][j] = stoi(row);
-			j++;
-		}
-	}
-}
-
 // функция считывания матрицы из файла
-void importFromFile(int n, int m, vector<vector<int>> &matrix) {
+void importFromFile(int &n, int &m, float &lambda, float &mu, vector<vector<int>> &matrix) {
 
 	string str;
 	ifstream in("input.txt");
 	if (in.is_open()) {
-		int i = 0;
+		int i = 0, k = 0;
 		while (getline(in, str)) {
 
 			if (str.size() == 0) continue;
+			
+			switch (k) {
+				case 0: 
+					n = stoi(str); // число строк в матрице
+					break;
+				case 1: 
+					m = stoi(str);  // число столбцов в матрице
+					break;
+				case 2: 
+					lambda = stof(str); // значение лямбда для критерия Гурвица 
+					break;
+				case 3: 
+					mu = stof(str); // значение мю для критерия Ходжа-Лемана
+					break;
 
-			string row;
-			istringstream ist(str);
-			int j = 0;
+				default: 
+					string row;
+					istringstream ist(str);
+					int j = 0;
 
-			while (ist >> row) {
-				matrix[i][j] = stoi(row);
-				j++;
+					while (ist >> row) {
+						matrix[i][j] = stoi(row);
+						j++;
+					}
+					i++;
+					break;
 			}
-			i++;
+			k++;
 		}
 	}
 	in.close();
@@ -243,55 +232,39 @@ int main() {
 
 	setlocale(LC_ALL, "ru");
 
-	string ans;
 	float lambda = 0.5, mu = 0.5;
 	int n = 8, m = 10;
 	vector<vector<int>> A(n, vector<int>(m));
 
 	cout << "Поиск решения игры в условиях неопределенности, применяя критерии Вальда, Сэвиджа,\n" <<
 		"Гурвица, Байеса - Лапласа и Ходжа - Лемана" << endl << endl;
-	while (true) {
-		cout << "Использовать значения по умолчанию (2 вариант): (yes / no) ";
-		cin >> ans;
-		if (ans == "no" || ans == "yes") break;
-	}
+	cout << "Считывание данных из файла!" << endl;
 
-	if (ans == "no") {
-		// считывание данных с консоли
-		cout << "Введите число строк матрицы A: ";
-		cin >> n;
-		cout << "Введите число столбцов матрицы A: ";
-		cin >> m;
-		cout << "Введите матрицу A: " << endl;
-		inputMatrix(n, m, std::ref(A));
-	}
-	else {
-		// считывание данных из файла
-		importFromFile(n, m, std::ref(A));
-	}
+	// считывание данных из файла
+	importFromFile(n, m, lambda, mu, ref(A));
 
 	vector<pair<int, int>> res_wald;
 	// поиск оптимальной стратегии по критерию Вальда
-	findWaldCriterion(A, std::ref(res_wald));
+	findWaldCriterion(A, ref(res_wald));
 
 	vector<pair<int, int>> res_savage;
 	// поиск оптимальной стратегии по критерию Сэвиджа
-	findSavageCriterion(A, std::ref(res_savage));
+	findSavageCriterion(A, ref(res_savage));
 
 	vector<pair<int, float>> res_hurwitz;
 	// поиск оптимальной стратегии по критерию Гурвица
-	findHurwitzCriterion(A, std::ref(res_hurwitz), lambda);
+	findHurwitzCriterion(A, ref(res_hurwitz), lambda);
 
 	vector<pair<int, float>> res_bayeslaplace;
 	// поиск оптимальной стратегии по критерию Байеса-Лапласа
-	findBayes_LaplaceCriterion(A, std::ref(res_bayeslaplace));
+	findBayes_LaplaceCriterion(A, ref(res_bayeslaplace));
 
 	vector<pair<int, float>> res_hodgeleman;
 	// поиск оптимальной стратегии по критерию Ходжа-Лемана
-	findHodge_LemanCriterion(A, std::ref(res_hodgeleman), mu);
+	findHodge_LemanCriterion(A, ref(res_hodgeleman), mu);
 
 	// запись результата в файл
 	output(res_wald, res_savage, res_hurwitz, res_bayeslaplace, res_hodgeleman);
 
-	cout << "Результаты записаны в файл!";
+	cout << "Результаты успешно сохранены!" << endl;
 }
